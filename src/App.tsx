@@ -1,14 +1,15 @@
 
 import './App.scss'
 import {Route, Routes} from 'react-router-dom';
-import Registration from './Components/Form/Registration';
+
+import Regmodule from "./Components/Form/Regmodule.tsx";
 function App() {
 
 
   return (
     <>
 <Routes>
-<Route path="/" element={<Registration/>}/>        
+<Route path="/" element={<Regmodule/>}/>
 </Routes>
     </>
   )

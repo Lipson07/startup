@@ -1,4 +1,93 @@
-*{
+
+@import './style/Font';
+
+* {
+    font-family: var(--font-primary);
+}
+
+body {
+    @include font-regular;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
+}
+
+h1 {
+    @include font-bold;
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+}
+
+h2 {
+    @include font-semibold;
+    font-size: 2rem;
+    margin: 0 0 0.875rem 0;
+}
+
+h3 {
+    @include font-medium;
+    font-size: 1.5rem;
+    margin: 0 0 0.75rem 0;
+}
+
+h4 {
+    @include font-medium;
+    font-size: 1.25rem;
+    margin: 0 0 0.625rem 0;
+}
+
+p {
+    @include font-regular;
+    font-size: 1rem;
+    margin: 0 0 1rem 0;
+}
+
+
+.text-light {
+    @include font-light;
+}
+
+.text-regular {
+    @include font-regular;
+}
+
+.text-medium {
+    @include font-medium;
+}
+
+.text-semibold {
+    @include font-semibold;
+}
+
+.text-bold {
+    @include font-bold;
+}
+
+// ===== COMPONENT STYLES =====
+.button {
+    @include font-medium;
+    font-size: 0.875rem;
+}
+
+.nav-link {
+    @include font-regular;
+    font-size: 1rem;
+}
+
+.card-title {
+    @include font-semibold;
+    font-size: 1.125rem;
+}
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+    }
 }

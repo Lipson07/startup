@@ -1,0 +1,129 @@
+
+.container {
+  width: 450px;
+  height: 500px;
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 12px;
+  display: flex;
+  padding-top: 50px;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 0;
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    margin: 0;
+    padding: 0 20px;
+    line-height: 1.5;
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+
+    .codeInputs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      width: 75%;
+
+      .codeInput {
+        width: 50px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: white;
+        font-size: 1.5rem;
+        text-align: center;
+        transition: all 0.2s ease;
+        box-sizing: border-box;
+
+        &:focus {
+          outline: none;
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+  }
+
+  .verifyButton {
+    width: 75%;
+    height: 52px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #404040 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 10px;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(135deg, #363636 0%, #4a4a4a 100%);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .resendSection {
+    text-align: center;
+    margin-top: 20px;
+
+    p {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .resendButton {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+}

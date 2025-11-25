@@ -50,5 +50,18 @@ class AuthController
             ], 500);
         }
     }
+public function checkUser(Request $request)
+{
+    $email = $request->query('email');
+    $name = $request->query('name');
+
+    $emailExists = User::where('email', $email)->exists();
+    $nameExists = User::where('name', $name)->exists();
+
+    return response()->json([
+        'email_exists' => $emailExists,
+        'name_exists' => $nameExists
+    ]);
+}
 }
 

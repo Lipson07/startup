@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react'
 import style from "../../style/Form/Registration.module.scss"
 
@@ -7,7 +8,12 @@ interface FormData {
   password: string;
 }
 
-function Registration() {
+interface RegistrationProps {
+  onSuccess: () => void;
+  onError: (errorMessage: string) => void;
+}
+
+function Registration({ onSuccess, onError }: RegistrationProps) {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -15,7 +21,6 @@ function Registration() {
   })
 
   const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<{[key: string]: string}>({})
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,131 +41,104 @@ function Registration() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    setMessage('')
     setErrors({})
 
     try {
-      console.log('Отправка данных:', formData)
-
-      const response = await fetch('http://127.0.0.1:8000/create', {
-        method: 'POST',
+      const checkResponse = await fetch(`http://127.0.0.1:8000/api/check-user?email=${encodeURIComponent(formData.email)}&name=${encodeURIComponent(formData.name)}`, {
+        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: JSON.stringify(formData)
       })
 
-      console.log('Статус ответа:', response.status)
-
-      const responseText = await response.text()
-      console.log('Ответ сервера:', responseText)
-
-      let data: any;
-      try {
-        data = JSON.parse(responseText)
-      } catch (parseError) {
-        console.error('Ошибка парсинга JSON:', parseError)
-        throw new Error(`Сервер вернул невалидный JSON: ${responseText.substring(0, 100)}...`)
+      if (!checkResponse.ok) {
+        throw new Error('Ошибка при проверке данных')
       }
 
-      if (!response.ok) {
-        if (data.errors) {
-          const errorMessages: {[key: string]: string} = {}
-          Object.keys(data.errors).forEach(key => {
-            errorMessages[key] = data.errors[key][0]
-          })
-          setErrors(errorMessages)
-          throw new Error('Проверьте правильность введенных данных')
-        }
-        throw new Error(data.message || `Ошибка сервера: ${response.status}`)
+      const checkData = await checkResponse.json()
+
+      if (checkData.email_exists) {
+        throw new Error('Пользователь с таким email уже существует')
       }
 
-      setMessage('Регистрация успешна!')
-      
-      setFormData({
-        name: '',
-        email: '',
-        password: ''
-      })
+      if (checkData.name_exists) {
+        throw new Error('Пользователь с таким именем уже существует')
+      }
+
+      // Если проверка пройдена, переходим к верификации email
+      onSuccess()
 
     } catch (error: any) {
-      console.error('Полная ошибка:', error)
-      setMessage(error.message || 'Произошла ошибка при регистрации')
+      console.error('Ошибка:', error)
+      onError(error.message || 'Произошла ошибка при регистрации')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className={style.main}>
-      <div className={style.containter}>
+      <div className={style.container}>
         <h1>Регистрация</h1>
-        
-        {message && (
-          <div className={message.includes('успешна') ? style.successMessage : style.errorMessage}>
-            {message}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className={style.inputGroup}>
             <label htmlFor="name">Имя</label>
-            <input 
-              type="text" 
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Введите ваше имя"
-              disabled={loading}
-              required
-              className={errors.name ? style.inputError : ''}
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Введите ваше имя"
+                disabled={loading}
+                required
+                className={errors.name ? style.inputError : ''}
             />
             {errors.name && <span className={style.errorText}>{errors.name}</span>}
           </div>
 
-          <div>
+          <div className={style.inputGroup}>
             <label htmlFor="email">Почта</label>
-            <input 
-              type="email" 
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="your@email.com"
-              disabled={loading}
-              required
-              className={errors.email ? style.inputError : ''}
+            <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="your@email.com"
+                disabled={loading}
+                required
+                className={errors.email ? style.inputError : ''}
             />
             {errors.email && <span className={style.errorText}>{errors.email}</span>}
           </div>
 
-          <div>
+          <div className={style.inputGroup}>
             <label htmlFor="password">Пароль</label>
-            <input 
-              type="password" 
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Создайте пароль (минимум 6 символов)"
-              disabled={loading}
-              required
-              className={errors.password ? style.inputError : ''}
+            <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Создайте пароль (минимум 6 символов)"
+                disabled={loading}
+                required
+                minLength={6}
+                className={errors.password ? style.inputError : ''}
             />
             {errors.password && <span className={style.errorText}>{errors.password}</span>}
           </div>
 
-          <button 
-            type="submit" 
-            disabled={loading}
+          <button
+              type="submit"
+              disabled={loading}
+              className={style.submitButton}
           >
-            {loading ? 'Регистрация...' : 'Зарегистрироваться'}
+            {loading ? 'Проверка...' : 'Продолжить'}
           </button>
         </form>
       </div>
-    </div>
   )
 }
 
