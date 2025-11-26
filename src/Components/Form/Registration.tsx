@@ -1,25 +1,30 @@
-
+// Registration.tsx
 import React, { useState } from 'react'
 import style from "../../style/Form/Registration.module.scss"
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../../store/user';
 
 interface FormData {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 interface RegistrationProps {
   onSuccess: () => void;
   onError: (errorMessage: string) => void;
+  onNavigateToLogin: () => void;
 }
 
-function Registration({ onSuccess, onError }: RegistrationProps) {
+function Registration({ onSuccess, onError, onNavigateToLogin }: RegistrationProps) {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   })
-
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<{[key: string]: string}>({})
 
@@ -38,12 +43,46 @@ function Registration({ onSuccess, onError }: RegistrationProps) {
     }
   }
 
+  const validateForm = (): boolean => {
+    const newErrors: {[key: string]: string} = {}
+
+    if (formData.name.length < 2) {
+      newErrors.name = 'Имя должно содержать минимум 2 символа'
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Введите корректный email'
+    }
+
+    if (formData.password.length < 6) {
+      newErrors.password = 'Пароль должен содержать минимум 6 символов'
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Пароли не совпадают'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
+    if (!validateForm()) {
+      return
+    }
+
     setLoading(true)
     setErrors({})
 
     try {
+      dispatch(setUserData({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      }));
+
       const checkResponse = await fetch(`http://127.0.0.1:8000/api/check-user?email=${encodeURIComponent(formData.email)}&name=${encodeURIComponent(formData.name)}`, {
         method: 'GET',
         headers: {
@@ -65,7 +104,6 @@ function Registration({ onSuccess, onError }: RegistrationProps) {
         throw new Error('Пользователь с таким именем уже существует')
       }
 
-      // Если проверка пройдена, переходим к верификации email
       onSuccess()
 
     } catch (error: any) {
@@ -130,13 +168,33 @@ function Registration({ onSuccess, onError }: RegistrationProps) {
             {errors.password && <span className={style.errorText}>{errors.password}</span>}
           </div>
 
+          <div className={style.inputGroup}>
+            <label htmlFor="confirmPassword">Подтвердите пароль</label>
+            <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                placeholder="Повторите пароль"
+                disabled={loading}
+                required
+                className={errors.confirmPassword ? style.inputError : ''}
+            />
+            {errors.confirmPassword && <span className={style.errorText}>{errors.confirmPassword}</span>}
+          </div>
+
           <button
               type="submit"
               disabled={loading}
               className={style.submitButton}
           >
-            {loading ? 'Проверка...' : 'Продолжить'}
+            {loading ? 'Проверка...' : 'Зарегистрироваться'}
           </button>
+
+          <div className={style.loginLink}>
+            Уже есть аккаунт? <button type="button" onClick={onNavigateToLogin} className={style.linkButton}>Войти</button>
+          </div>
         </form>
       </div>
   )

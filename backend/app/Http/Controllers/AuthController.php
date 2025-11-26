@@ -63,5 +63,33 @@ public function checkUser(Request $request)
         'name_exists' => $nameExists
     ]);
 }
+public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:6'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'success' => false,
+            'error' => 'Неверный email или пароль'
+        ], 401);
+    }
+
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Вход выполнен успешно',
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email
+        ]
+    ]);
+}
 }
 

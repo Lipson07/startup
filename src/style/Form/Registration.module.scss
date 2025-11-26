@@ -1,6 +1,6 @@
 .container {
     width: 450px;
-    height: 650px;
+    height: 700px;
     background: rgba(20, 20, 20, 0.95);
     border-radius: 12px;
     display: flex;
@@ -111,4 +111,27 @@
             cursor: not-allowed;
         }
     }
+.loginLink {
+
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+  
+    a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-weight: 500;
+  
+      &:hover {
+        color: rgba(255, 255, 255, 1);
+        text-decoration: underline;
+      }
+    }
+  }
 }
+.linkButton{
+    background: none;
+    border: none;
+    color: white;
+cursor: pointer;
+  }

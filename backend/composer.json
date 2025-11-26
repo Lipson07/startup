@@ -2,7 +2,7 @@
     "name": "laravel/laravel",
     "type": "project",
     "require": {
-        "php": "^8.4",
+        "php": "^8.2",
         "laravel/framework": "^12.40",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10",

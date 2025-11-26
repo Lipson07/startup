@@ -1,18 +1,26 @@
+// App.tsx
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Regmodule from './Components/Form/Regmodule';
+import MainPage from './Components/Main/MainPage';
 
-import './App.scss'
-import {Route, Routes} from 'react-router-dom';
-
-import Regmodule from "./Components/Form/Regmodule.tsx";
 function App() {
-
-
   return (
-    <>
-<Routes>
-<Route path="/" element={<Regmodule/>}/>
-</Routes>
-    </>
-  )
+
+      <div className="App">
+        <Routes>
+     
+          <Route path="/auth/*" element={<Regmodule />} />
+
+          <Route path="/main" element={<MainPage />} />
+
+          <Route path="/" element={<Regmodule />} />
+
+          <Route path="*" element={<div>Страница не найдена</div>} />
+        </Routes>
+      </div>
+
+  );
 }
 
-export default App
+export default App;
