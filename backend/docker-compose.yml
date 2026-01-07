@@ -16,7 +16,7 @@ services:
       - DB_PORT=5432
       - DB_DATABASE=note_proj
       - DB_USERNAME=postgres
-      - DB_PASSWORD=Samoilov030! # Исправьте пароль здесь
+      - DB_PASSWORD=password # Исправьте пароль здесь
     depends_on:
       - postgres
     networks:
@@ -31,7 +31,7 @@ services:
     environment:
       - POSTGRES_DB=note_proj # Исправьте название БД
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=Samoilov030! # Пароль должен совпадать с app
+      - POSTGRES_PASSWORD=password # Пароль должен совпадать с app
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

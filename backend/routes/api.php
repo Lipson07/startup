@@ -57,17 +57,26 @@ Route::prefix("tasks")->group(function () {
     Route::post("/{id}/complete", [TaskController::class, "complete"]);
 });
 
-Route::prefix("task-attachments")->group(function () {
+Route::prefix("tasks/{task}/attachments")->group(function () {
     Route::get("/", [TaskAttachmentController::class, "index"]);
-    Route::post("/upload", [TaskAttachmentController::class, "store"]);
-    Route::get("/{id}", [TaskAttachmentController::class, "show"]);
-    Route::put("/{id}", [TaskAttachmentController::class, "update"]);
-    Route::delete("/{id}", [TaskAttachmentController::class, "destroy"]);
-    Route::get("/{id}/download", [TaskAttachmentController::class, "download"]);
-    Route::get("/{id}/preview", [TaskAttachmentController::class, "preview"]);
-    Route::get("/task/{taskId}/stats", [
+    Route::post("/", [TaskAttachmentController::class, "store"]);
+    Route::post("/multiple", [
         TaskAttachmentController::class,
-        "stats",
+        "storeMultiple",
+    ]);
+    Route::get("/{attachment}", [TaskAttachmentController::class, "show"]);
+    Route::put("/{attachment}", [TaskAttachmentController::class, "update"]);
+    Route::delete("/{attachment}", [
+        TaskAttachmentController::class,
+        "destroy",
+    ]);
+    Route::get("/{attachment}/download", [
+        TaskAttachmentController::class,
+        "download",
+    ]);
+    Route::get("/{attachment}/thumbnail", [
+        TaskAttachmentController::class,
+        "thumbnail",
     ]);
 });
 Route::prefix("github-projects")->group(function () {
@@ -134,7 +143,10 @@ Route::prefix("github-projects")->group(function () {
     Route::get("/my/{userId}", [GitHubProjectController::class, "myProjects"]);
     Route::post("/{id}/archive", [GitHubProjectController::class, "archive"]);
     Route::post("/{id}/restore", [GitHubProjectController::class, "restore"]);
-    Route::get("/github/repo", [GitHubProjectController::class, "getRepoFromGitHub"]);
+    Route::get("/github/repo", [
+        GitHubProjectController::class,
+        "getRepoFromGitHub",
+    ]);
 });
 Route::prefix("subscriptions")->group(function () {
     Route::post("/", [SubscriptionController::class, "create"]);
